@@ -30,11 +30,13 @@
 #define STEP_PER_ROTATION_Y 48
 
 //for bound limiters if we get to them
-#define X_BOUND_PIN 12
-#define Y_BOUND_PIN 11
+#define X_PULSE 8
+#define X_DIR 9
+#define Y_PULSE 10
+#define Y_DIR 11
 
-AF_Stepper xmotor(48, 1);
-AF_Stepper ymotor(48, 2);
+//AF_Stepper xmotor(48, 1);
+//AF_Stepper ymotor(48, 2);
 
 
 byte msg[4];
@@ -52,17 +54,33 @@ boolean yRunning = false;
 byte stepperMode = SINGLE;
 
 void forwardstepx() {  
-  xmotor.onestep(FORWARD, stepperMode);
+  //xmotor.onestep(FORWARD, stepperMode);
+  digitalWrite(X_DIR, HIGH);
+  digitalWrite(X_PULSE, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(X_PULSE, LOW);
 }
 void backwardstepx() {  
-  xmotor.onestep(BACKWARD, stepperMode);
+  //xmotor.onestep(BACKWARD, stepperMode);
+  digitalWrite(X_DIR, LOW);
+  digitalWrite(X_PULSE, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(X_PULSE, LOW);
 }
 // wrappers for the second motor!
 void forwardstepy() {  
-  ymotor.onestep(FORWARD, stepperMode);
+  //ymotor.onestep(FORWARD, stepperMode);
+  digitalWrite(Y_DIR, HIGH);
+  digitalWrite(Y_PULSE, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(Y_PULSE, LOW);
 }
 void backwardstepy() {  
-  ymotor.onestep(BACKWARD, stepperMode);
+  //ymotor.onestep(BACKWARD, stepperMode);
+  digitalWrite(Y_DIR, LOW);
+  digitalWrite(Y_PULSE, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(Y_PULSE, LOW);
 }
 
 AccelStepper xAxis(forwardstepx, backwardstepx);
@@ -72,6 +90,10 @@ void setup()
 {
 	Serial.begin(9600);
         pinMode(13,OUTPUT);
+        pinMode(X_PULSE,OUTPUT);
+        pinMode(X_DIR,OUTPUT);
+        pinMode(Y_PULSE,OUTPUT);
+        pinMode(Y_DIR,OUTPUT);
         delay(500);
         nextReadyX = millis()+1000;
         nextReadyY = millis()+1000;
